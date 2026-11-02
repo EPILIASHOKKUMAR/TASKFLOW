@@ -13,11 +13,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
-@CrossOrigin(origins = {
-    "http://localhost:5173",
-    "https://localhost",
-    "http://localhost"
-})
+@CrossOrigin(
+    origins = {
+        "http://localhost:5173",
+        "http://localhost",
+        "https://localhost"
+    },
+    allowedHeaders = "*",
+    methods = {
+        RequestMethod.GET,
+        RequestMethod.POST,
+        RequestMethod.PUT,
+        RequestMethod.PATCH,
+        RequestMethod.DELETE,
+        RequestMethod.OPTIONS
+    }
+)
 public class TaskController {
 
     private final TaskService taskService;
@@ -26,34 +37,28 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    // Get all tasks
     @GetMapping
     public List<Task> getAllTasks() {
         return taskService.getAllTasks();
     }
 
-    // Create a new task
     @PostMapping
     public Task createTask(@Valid @RequestBody Task task) {
         return taskService.createTask(task);
     }
 
-    // Update a task
     @PutMapping("/{id}")
     public Task updateTask(
             @PathVariable Long id,
             @Valid @RequestBody Task task) {
-
         return taskService.updateTask(id, task);
     }
 
-    // Mark task as completed
     @PatchMapping("/{id}/complete")
     public Task completeTask(@PathVariable Long id) {
         return taskService.completeTask(id);
     }
 
-    // Delete a task
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
